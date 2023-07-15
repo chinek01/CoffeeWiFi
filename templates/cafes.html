@@ -30,6 +30,7 @@
                 <th scope="col">seats</th>
                 <th scope="col">has toilet</th>
                 <th scope="col">coffee price</th>
+                <th scope="col"></th>
             </tr>
           </thead>
 
@@ -43,7 +44,8 @@
                 <td>{{ row.seats }}</td>
                 <td>{{ row.has_toilet }}</td>
                 <td>{{ row.coffee_price }}</td>
-                <td><a href="{{url_for('delete'', id=row.id) }}">Delete</a></td>
+                <td><a href="{{ url_for('delete_cafe', id=row.id) }}">Delete</a></td>
+<!--                <td>{{ row.id }}</td>-->
             </tr>
           </tbody>
 

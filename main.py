@@ -69,15 +69,31 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/cafes_li")
+@app.route("/cafes")
 def cafes():
     """
-    get all cafes_li
+    get all cafes
     :return:
     """
     cafes_list = db.session.query(Cafe).all()
 
     return render_template('cafes.html', cafes=cafes_list)
+
+
+@app.route('/delete')
+def delete_cafe():
+    cafe_id = int(request.args.get('id'))
+
+    try:
+
+        cafe_to_del = Cafe.query.get(cafe_id)
+
+        db.session.delete(cafe_to_del)
+        db.session.commit()
+    except Exception as e:
+        print(e.__str__())
+
+    return redirect(url_for('cafes'))
 
 
 @app.route("/add", methods=["GET", "POST"])
