@@ -8,7 +8,7 @@ Author: MC
 
 """
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -80,25 +80,60 @@ def cafes():
     return render_template('cafes.html', cafes=cafes_list)
 
 
-@app.route("/add", methods=['GET', 'POST'])
+@app.route("/add", methods=["GET", "POST"])
 def add_cafe():
     form = CaffeForm_Add()
+    print("do add form")
 
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        h_wifi = False
+        if request.form.get('has_wifi') == 'y':
+            h_wifi = True
+
+        h_toilet = False
+        if request.form.get('has_toilet') == 'y':
+            h_toilet = True
+
+        h_sockets = False
+        if request.form.get('has_sockets') == 'y':
+            h_sockets = True
+
+        calls = False
+        if request.form.get('can_take_calls') == 'y':
+            calls = True
+
         new_cafe = Cafe(
             name=request.form.get("name"),
             map_url=request.form.get('map_url'),
             img_url=request.form.get('img_url'),
             location=request.form.get('location'),
             seats=request.form.get('seats'),
-            has_toilet=request.form.get('has_toilet'),
-            has_wifi=request.form.get('has_wifi'),
-            has_sockets=request.form.get('has_sockets'),
-            can_take_calls=request.form.get('can_take_calls'),
+            # has_toilet=request.form.get('has_toilet'),
+            has_toilet=h_toilet,
+            # has_wifi=request.form.get('has_wifi'),
+            has_wifi=h_wifi,
+            # has_sockets=request.form.get('has_sockets'),
+            has_sockets=h_sockets,
+            # can_take_calls=request.form.get('can_take_calls'),
+            can_take_calls=calls,
             coffee_price=request.form.get('coffee_price')
         )
+        # new_cafe = Cafe(
+        #     name=request.form.name.data,
+        #     map_url=request.form.map_url.data,
+        #     img_url=request.form.img_url.data,
+        #     location=request.form.location.data,
+        #     seats=request.form.seats.data,
+        #     has_toilet=request.form.has_toilet.data,
+        #     has_wifi=request.form.has_wifi.data,
+        #     has_sockets=request.form.has_sockets.data,
+        #     can_take_calls=request.form.can_take_calls.data,
+        #     coffee_price=request.form.coffee_price.data
+        # )
         db.session.add(new_cafe)
         db.session.commit()
+        return redirect(url_for('cafes'))
+        # Exercise:
 
     return render_template("add.html", form=form)
 
