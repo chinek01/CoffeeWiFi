@@ -8,10 +8,12 @@ Author: MC
 
 """
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField, BooleanField
+from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -47,6 +49,21 @@ class Cafe(db.Model):
         return dictionary
 
 
+class CaffeForm_Add(FlaskForm):
+    name = StringField("Cafe name:", validators=[DataRequired()])
+    map_url = StringField("Map url:", validators=[DataRequired()])
+    img_url = StringField("Image url:", validators=[DataRequired()])
+    location = StringField("Location:", validators=[DataRequired()])
+    seats = StringField("Seats:", validators=[DataRequired()])
+    has_toilet = BooleanField("Has toilet:", validators=[DataRequired()])
+    has_wifi = BooleanField("Has wifi:", validators=[DataRequired()])
+    has_sockets = BooleanField("Has sockets:", validators=[DataRequired()])
+    can_take_calls = BooleanField("Can take calls", validators=[DataRequired()])
+    coffee_proce = StringField("Coffee proce:", validators=[DataRequired()])
+
+    submit = SubmitField("Submit")
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -61,6 +78,29 @@ def cafes():
     cafes_list = db.session.query(Cafe).all()
 
     return render_template('cafes.html', cafes=cafes_list)
+
+
+@app.route("/add", methods=['GET', 'POST'])
+def add_cafe():
+    form = CaffeForm_Add()
+
+    if form.validate_on_submit():
+        new_cafe = Cafe(
+            name=request.form.get("name"),
+            map_url=request.form.get('map_url'),
+            img_url=request.form.get('img_url'),
+            location=request.form.get('location'),
+            seats=request.form.get('seats'),
+            has_toilet=request.form.get('has_toilet'),
+            has_wifi=request.form.get('has_wifi'),
+            has_sockets=request.form.get('has_sockets'),
+            can_take_calls=request.form.get('can_take_calls'),
+            coffee_price=request.form.get('coffee_price')
+        )
+        db.session.add(new_cafe)
+        db.session.commit()
+
+    return render_template("add.html", form=form)
 
 
 if __name__ == '__main__':
