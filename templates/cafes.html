@@ -24,27 +24,25 @@
 
           <thead>
             <tr>
-                <th scope="col">{{ cafes[0][0] }}</th>
-                <th scope="col">{{ cafes[0][1] }}</th>
-                <th scope="col">{{ cafes[0][2] }}</th>
-                <th scope="col">{{ cafes[0][3] }}</th>
-                <th scope="col">{{ cafes[0][4] }}</th>
-                <th scope="col">{{ cafes[0][5] }}</th>
-                <th scope="col">{{ cafes[0][6] }}</th>
+                <th scope="col">name</th>
+                <th scope="col">map_url</th>
+                <th scope="col">location</th>
+                <th scope="col">seats</th>
+                <th scope="col">has toilet</th>
+                <th scope="col">coffee price</th>
             </tr>
           </thead>
 
-          {% for row in cafes[1:]: %}
+          {% for row in cafes: %}
 
           <tbody>
             <tr>
-                <th scope="row">{{ row[0] }}</th>
-                <td><a href="{{ row[1] }}" >Maps Link</a></td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-                <td>{{ row[5] }}</td>
-                <td>{{ row[6] }}</td>
+                <th scope="row">{{ row.name }}</th>
+                <td><a href="{{ row.map_url }}" >Maps Link</a></td>
+                <td>{{ row.location }}</td>
+                <td>{{ row.seats }}</td>
+                <td>{{ row.has_toilet }}</td>
+                <td>{{ row.coffee_price }}</td>
             </tr>
           </tbody>
 

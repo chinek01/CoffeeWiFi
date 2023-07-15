@@ -52,5 +52,16 @@ def home():
     return render_template("index.html")
 
 
+@app.route("/cafes_li")
+def cafes():
+    """
+    get all cafes_li
+    :return:
+    """
+    cafes_list = db.session.query(Cafe).all()
+
+    return render_template('cafes.html', cafes=cafes_list)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
